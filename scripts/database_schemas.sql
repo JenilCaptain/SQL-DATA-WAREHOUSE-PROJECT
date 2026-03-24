@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS data_warehouse;
+
+CREATE SCHEMA bronze;
+CREATE SCHEMA silver;
+CREATE SCHEMA gold;
+
