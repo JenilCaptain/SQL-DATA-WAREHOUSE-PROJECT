@@ -1,0 +1,1 @@
+CALL silver.load_silver();
