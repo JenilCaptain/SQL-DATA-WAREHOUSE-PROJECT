@@ -1,7 +1,35 @@
+/*
+===============================================================================
+Stored Procedure: Load Silver Layer (Bronze -> Silver)
+===============================================================================
+Script Purpose:
+    This stored procedure performs the ETL (Extract, Transform, Load) process to 
+    populate the 'silver' schema tables from the 'bronze' schema.
+	Actions Performed:
+		- Truncates Silver tables.
+		- Inserts transformed and cleansed data from Bronze into Silver tables.
+		
+Parameters:
+    None. 
+	  This stored procedure does not accept any parameters or return any values.
+
+Usage Example:
+    EXEC Silver.load_silver;
+===============================================================================
+*/
+
 CREATE OR REPLACE PROCEDURE silver.load_silver()
 LANGUAGE plpgsql
 AS $$
+DECLARE 
+    batch_start_time TIMESTAMP;
+    batch_end_time TIMESTAMP;
+    start_time TIMESTAMP;
+    end_time TIMESTAMP;
 BEGIN
+
+    batch_start_time := CURRENT_TIMESTAMP;
+
 
     RAISE NOTICE '================================================';
     RAISE NOTICE 'Loading Silver Layer';
@@ -214,6 +242,36 @@ BEGIN
     subcat,
     maintenance
     FROM bronze.erp_px_cat_g1v2;
+
+    ---- final logging for debuging and time duration ------
+
+    end_time := CURRENT_TIMESTAMP;
+
+    RAISE NOTICE '>> Load Duration: % seconds',
+        EXTRACT(EPOCH FROM (end_time - start_time));
+
+    RAISE NOTICE '>> -------------';
+
+    -------------------------------
+    -- FINAL SUMMARY
+    -------------------------------
+    batch_end_time := CURRENT_TIMESTAMP;
+
+    RAISE NOTICE '=========================================';
+    RAISE NOTICE 'Silver Layer Load Completed';
+
+    RAISE NOTICE '>> Total Load Duration: % seconds',
+        EXTRACT(EPOCH FROM (batch_end_time - batch_start_time));
+
+    RAISE NOTICE '=========================================';
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE '=========================================';
+            RAISE NOTICE 'ERROR OCCURRED DURING LOADING SILVER LAYER';
+            RAISE NOTICE 'Error Message: %', SQLERRM;
+            RAISE NOTICE '=========================================';
+
 
 END;
 $$;
