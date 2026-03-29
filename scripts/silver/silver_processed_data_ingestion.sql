@@ -62,16 +62,16 @@ BEGIN
         END AS cst_gndr,
         CASE
             WHEN UPPER(TRIM(cst_marital_status)) = 'M' THEN 'Married'
-            WHEN UPPER(TRIM(cst_marital_status)) = 'F' THEN 'Single'
+            WHEN UPPER(TRIM(cst_marital_status)) = 'S' THEN 'Single'
             ELSE 'n/a'
         END AS cst_marital_status,
 		cst_create_date
-        
+
     FROM(
             SELECT *,
                 ROW_NUMBER() OVER(
                     PARTITION BY cst_id
-                    ORDER BY cst_id ASC
+                    ORDER BY cst_create_date DESC
                 ) as flag_last
             FROM bronze.crm_cust_info
         ) t
