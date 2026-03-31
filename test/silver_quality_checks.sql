@@ -50,6 +50,8 @@ FROM silver.crm_cust_info
 
 ------------------ crm_prd_info ------------------
 
+SELECT * FROM SILVER.crm_prd_info;
+
 --Handeling primary key (check if duplicates or missing)
 -- Expectations: No result
 SELECT prd_id, COUNT(*)
