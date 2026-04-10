@@ -59,3 +59,7 @@ LEFT JOIN gold.dim_products AS p
     ON f.product_key = p.product_key
 WHERE c.customer_id IS NULL OR p.product_key IS NULL
 ;
+
+
+SELECT *
+FROM gold.fact_sales;

@@ -43,7 +43,7 @@ WHERE pn.prd_end_dt IS NULL -- Filter out Historical data
 
 ---------- Creating Fact Sales ----------
 
-CREATE VIEW gold.fact_sales AS
+CREATE OR REPLACE VIEW gold.fact_sales AS
 SELECT 
 sd.sls_ord_num AS order_number,
 pr.product_key, -- using the genrated primary-key from gold.dim_products
